@@ -1,0 +1,14 @@
+{
+  "name": "twitter-monitor",
+  "version": "1.0.0",
+  "description": "Monitor tweets via TwitterAPI.io WebSocket and forward to Discord",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "ws": "^8.18.0"
+  }
+}
