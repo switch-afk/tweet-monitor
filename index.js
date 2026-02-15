@@ -18,6 +18,42 @@ let discordReady = false;
 let ws = null;
 let reconnectTimeout = null;
 
+const sentTweetIds = new Set();
+const SENT_IDS_MAX = 10000;
+const tweetQueue = [];
+let queueProcessing = false;
+
+function enqueueTweets(tweets) {
+  for (const tweet of tweets) {
+    const id = tweet.id || tweet.id_str;
+    if (!id || sentTweetIds.has(id)) continue;
+    sentTweetIds.add(id);
+    if (sentTweetIds.size > SENT_IDS_MAX) {
+      const first = sentTweetIds.values().next().value;
+      sentTweetIds.delete(first);
+    }
+    tweetQueue.push(tweet);
+  }
+  tweetQueue.sort((a, b) => {
+    const timeA = new Date(a.createdAt || a.created_at || 0).getTime();
+    const timeB = new Date(b.createdAt || b.created_at || 0).getTime();
+    return timeA - timeB;
+  });
+  processQueue();
+}
+
+async function processQueue() {
+  if (queueProcessing) return;
+  queueProcessing = true;
+  while (tweetQueue.length > 0) {
+    const tweet = tweetQueue.shift();
+    try {
+      await sendTweetToDiscord(tweet);
+    } catch {}
+  }
+  queueProcessing = false;
+}
+
 function decodeHtmlEntities(text) {
   if (!text) return text;
   return text
@@ -127,9 +163,7 @@ function connectWebSocket() {
       const msg = JSON.parse(data.toString());
       if (msg.event_type === "tweet") {
         const tweets = msg.tweets || [];
-        for (const tweet of tweets) {
-          sendTweetToDiscord(tweet).catch(() => {});
-        }
+        enqueueTweets(tweets);
       }
     } catch {}
   });
