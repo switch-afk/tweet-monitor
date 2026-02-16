@@ -4,7 +4,7 @@ Discord bot that monitors tweets in real-time via [TwitterAPI.io](https://twitte
 
 ## Demo
 
-<iframe width="1446" height="813" src="https://www.youtube.com/embed/usPyGJnF8rY" title="Tweet Monitor - Real-Time Twitter Notifications for Discord" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Tweet Monitor](https://img.youtube.com/vi/usPyGJnF8rY/maxresdefault.jpg)](https://youtu.be/usPyGJnF8rY)
 
 ## Setup
 
